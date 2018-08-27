@@ -59,10 +59,14 @@ public class AvitoDriver {
             announcement.setDescription(Parser.getDescription(html));
             announcement.setPrice(Parser.getPrice(html));
             announcement.setImageUrl(Parser.getImageUrls(html));
+            announcement.setMetro(Parser.getMetro(html));
+            announcement.setOwnerName(Parser.getOwnerName(html));
         } catch (IOException | IllegalAccessException e) {
             announcement.setDescription("Не удалось загрузить описание");
             announcement.setName("Не удалось загрузить название");
             announcement.setPrice(0);
+            announcement.setOwnerName("Не удалось загрузить имя продавца");
+            announcement.setMetro("Не удалось загрузить станцию метро");
         }
 
     }

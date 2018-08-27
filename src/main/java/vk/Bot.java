@@ -42,7 +42,7 @@ public class Bot {
         URL url = new URL(imageUrl);
         InputStream is = url.openStream();
 
-        File file = new File(System.currentTimeMillis() + ".jpg");
+        File file = new File(System.nanoTime() + ".jpg");
         file.createNewFile();
         OutputStream os = new FileOutputStream(file);
 

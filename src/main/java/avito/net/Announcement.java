@@ -11,6 +11,9 @@ public class Announcement {
     private int price;
     private String url;
     private List<String> imageUrls;
+    private String metro;
+    private String ownerName;
+
     private boolean loaded = false;
     private AvitoDriver driver;
 
@@ -50,6 +53,14 @@ public class Announcement {
         return imageUrls;
     }
 
+    public String getMetro() {
+        return metro;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
     void setName(String name) {
         this.name = name;
     }
@@ -64,6 +75,14 @@ public class Announcement {
 
     void setImageUrl(List<String> urls) {
         imageUrls = urls;
+    }
+
+    void setMetro(String metro) {
+        this.metro = metro;
+    }
+
+    void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     @Override

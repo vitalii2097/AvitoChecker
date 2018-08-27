@@ -23,7 +23,11 @@ public class VkListener extends IListener {
                 .append(announcement.getName())
                 .append("\n•")
                 .append(announcement.getPrice())
-                .append("\n•");
+                .append("\n\n")
+                .append(announcement.getMetro())
+                .append("\n")
+                .append(announcement.getOwnerName())
+                .append("\n\n");
         if (announcement.getDescription().length() > 700) {
             builder.append(announcement.getDescription(), 0, 700).append("...");
         } else {

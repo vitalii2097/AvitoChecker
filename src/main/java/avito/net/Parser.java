@@ -54,6 +54,28 @@ class Parser {
         return findValue(code, pattern);
     }
 
+    static String getMetro(String code) {
+        String pattern = "<div class=\"seller-info-label\">Адрес</div> <div class=\"seller-info-value\">\n" +
+                " ?\n" +
+                " </div>";
+        try {
+            return findValue(code, pattern);
+        } catch (IllegalArgumentException e) {
+            return "Без адреса";
+        }
+    }
+
+    static String getOwnerName(String code) {
+        String pattern = "title=\"Нажмите, чтобы перейти в профиль\">\n" +
+                " ?\n" +
+                " </a>";
+        try {
+            return findValue(code, pattern);
+        } catch (IllegalArgumentException e) {
+            return "Без имени";
+        }
+    }
+
     static String getDescription(String code) {
         String pattern = "<div class=\"item-description-text\" itemprop=\"description\">\n" +
                 "  <p>?</p>  </div>";

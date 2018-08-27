@@ -41,7 +41,7 @@ public class FileStorage implements Storage {
     @Override
     public void add(Pair<String, Integer> element) {
         try (FileWriter writer = new FileWriter(file, true);) {
-            writer.write(element.getKey() + " " + element.getValue());
+            writer.write(element.getKey() + " " + element.getValue() + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
