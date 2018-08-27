@@ -25,7 +25,11 @@ public class Announcement {
     }
 
     Announcement(String url, AvitoDriver avitoDriver) {
-        this.url = url;
+        if (url.contains("?")) {
+            this.url = url.substring(0, url.indexOf("?"));
+        } else {
+            this.url = url;
+        }
         driver = avitoDriver;
         imageUrls = new ArrayList<>();
     }
