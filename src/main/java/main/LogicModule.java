@@ -11,6 +11,8 @@ import storage.Storage;
 import vk.Bot;
 import vk.Conversation;
 
+import java.util.Date;
+
 public class LogicModule {
 
     private final AvitoChecker avitoChecker;
@@ -24,11 +26,24 @@ public class LogicModule {
     }
 
     void handle(Conversation conversation, String message) {
+        switch(message) {
+            case "test" : {
+                conversation.send(new Date().toString());
+                break;
+            }
+            case "clear" : {
+                avitoChecker.clearListener(new VkListener(Bot.getInstance(), conversation));
+                conversation.send("Все ссылки были удалены");
+                break;
+            }
+            default: {
+                Url url = new AvitoUrl(message);
+                addRequest(conversation, url);
 
-        Url url = new AvitoUrl(message);
-        addRequest(conversation, url);
+                storage.add(new Pair<>(message, (int)conversation.getId()));
+            }
+        }
 
-        storage.add(new Pair<>(message, (int)conversation.getId()));
     }
 
     void addRequest(Conversation conversation, Url url) {

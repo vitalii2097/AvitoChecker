@@ -44,6 +44,10 @@ class Query implements Iterable<Announcement> {
         listener.setIterator(iterator());
     }
 
+    void dropListener(IListener listener) {
+        listeners.remove(listener);
+    }
+
     public Url getUrl() {
         return url;
     }

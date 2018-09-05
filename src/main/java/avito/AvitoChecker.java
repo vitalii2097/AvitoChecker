@@ -63,4 +63,8 @@ public class AvitoChecker {
         System.out.println("Added new listener=" + listener + " to query=" + query);
     }
 
+    public void clearListener(IListener listener) {
+        queries.values().forEach(query -> query.dropListener(listener));
+    }
+
 }
