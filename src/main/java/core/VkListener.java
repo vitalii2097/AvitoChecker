@@ -17,7 +17,7 @@ public class VkListener extends IListener {
     }
 
     @Override
-    void action(IListener listener, Announcement announcement) {
+    void action(Announcement announcement) {
         StringBuilder builder = new StringBuilder();
         builder.append('•')
                 .append(announcement.getName())

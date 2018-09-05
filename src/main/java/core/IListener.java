@@ -17,10 +17,10 @@ public abstract class IListener {
 
     public final void notifyNewAnnouncement() {
         while (announcementIterator.hasNext()) {
-            action(this, announcementIterator.next());
+            action(announcementIterator.next());
         }
     }
 
-    abstract void action(IListener listener, Announcement announcement);
+    abstract void action(Announcement announcement);
 
 }

@@ -1,6 +1,5 @@
 package main;
 
-import avito.Activity;
 import avito.AvitoChecker;
 import avito.AvitoUrl;
 import core.VkListener;
@@ -40,11 +39,7 @@ public class Main {
 
     private void load() {
         for (Pair<String, Integer> pair : storage.load()) {
-            avitoChecker.addListener(
-                    new VkListener(bot, new Conversation(pair.getValue())),
-                    new AvitoUrl(pair.getKey()),
-                    Activity.MEDIUM);
-
+            logicModule.addRequest(new Conversation(pair.getValue()), new AvitoUrl(pair.getKey()));
         }
     }
 }

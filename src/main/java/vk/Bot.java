@@ -99,6 +99,9 @@ public class Bot {
                 .executeAsString(), JsonObject.class);
 
         JsonArray photos = response.getAsJsonArray("response");
+        if (photos.size() == 0) {
+            throw new IOException();
+        }
         JsonObject photo = photos.get(0).getAsJsonObject();
 
         return "photo"
@@ -114,6 +117,9 @@ public class Bot {
         for (String imageUrl : imageUrls) {
             try {
                 images.add(uploadImageToVk(imageUrl));
+            }
+            catch (IOException e) {
+                System.out.println("Неудалось загрузить фотографию");
             } catch (Exception e) {
                 e.printStackTrace();
             }

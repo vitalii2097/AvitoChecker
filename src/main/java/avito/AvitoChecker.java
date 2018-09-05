@@ -4,6 +4,7 @@ import avito.net.Announcement;
 import avito.net.AvitoDriver;
 import core.IListener;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ class Checker implements Runnable {
     private AvitoDriver driver;
 
     private void updateQuery() {
+        System.out.println("start load " + new Date());
         List<Announcement> announcements = driver.getAnnouncements(query.getUrl());
         announcements.forEach(query::addAnnouncement);
         System.out.println("Updated query: " + query);
@@ -46,12 +48,13 @@ public class AvitoChecker {
         queries = new HashMap<>();
     }
 
-    public void addListener(IListener listener, Url url, Activity activity) {
+    public void addListener(IListener listener, Url url) {
         if (!queries.containsKey(url)) {
             Query query = new Query(url);
             queries.put(url, query);
 
-            scheduler.scheduleAtFixedRate(new Checker(query, driver), 5, activity.seconds, TimeUnit.SECONDS);
+            int seconds = new Date().getSeconds();
+            scheduler.scheduleAtFixedRate(new Checker(query, driver), 65 - seconds, 60, TimeUnit.SECONDS);
             System.out.println("Added new query: " + query);
         }
 

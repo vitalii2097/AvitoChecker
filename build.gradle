@@ -23,4 +23,10 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.0.1'
 
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: "9.4.0.v20161208"
+
+    compile group: 'org.hibernate', name: 'hibernate-gradle-plugin', version: '5.3.0.Final'
+
+    compile 'org.postgresql:postgresql:9.4-1206-jdbc42'
+
+    compile 'org.postgresql:postgresql:42.1.1'
 }

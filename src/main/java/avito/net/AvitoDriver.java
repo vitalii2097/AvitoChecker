@@ -45,7 +45,7 @@ public class AvitoDriver {
             }
         }
         System.out.println("Loaded " + announcements.size() + " announcements by url=" + avitoUrl.getUrl()
-                + "; new ann. =" + countNewAnnouncements);
+                + "; new ann. =" + countNewAnnouncements + "; " + new Date());
 
         return announcements;
     }
