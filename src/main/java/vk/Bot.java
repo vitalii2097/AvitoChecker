@@ -23,6 +23,8 @@ import java.util.Random;
 
 public class Bot {
 
+
+
     private final int groupId = 170549975;
     private final String accessToken = "75aadc0f278b4608ad5fa5baca2ab0aab9d6f45f0573c389455dcebc0bd620968d61119aef09333e4b546";
     private final static Random random = new Random();
@@ -31,11 +33,17 @@ public class Bot {
     private final HttpTransportClient client;
     private final Gson gson = new Gson();
 
-    public Bot() {
+    private Bot() {
         client = new HttpTransportClient();
         apiClient = new VkApiClient(client);
 
         actor = new GroupActor(groupId, accessToken);
+    }
+
+    private static volatile Bot instance = new Bot();
+
+    public static Bot getInstance() {
+        return instance;
     }
 
     private File downloadImage(String imageUrl) throws IOException {

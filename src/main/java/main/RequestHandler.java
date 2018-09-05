@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import vk.Conversation;
+import vk.VkConversation;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +58,7 @@ class RequestHandler extends AbstractHandler {
                     JsonObject object = requestJson.getAsJsonObject("object");
                     long userId = object.getAsJsonPrimitive("peer_id").getAsInt();
                     String message = object.get("text").getAsString();
-                    logicHandler.handle(new Conversation(userId), message);
+                    logicHandler.handle(new VkConversation(userId), message);
                     responseBody = OK_BODY;
                     break;
                 default:

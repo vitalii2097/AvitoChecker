@@ -1,8 +1,9 @@
 package vk;
 
+import java.util.List;
 import java.util.Objects;
 
-public class Conversation {
+public abstract class Conversation {
 
     private long id;
 
@@ -13,6 +14,10 @@ public class Conversation {
     public long getId() {
         return id;
     }
+
+    public abstract void send(String message);
+
+    public abstract void send(String message, List<String> images);
 
     @Override
     public boolean equals(Object o) {

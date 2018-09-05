@@ -9,6 +9,7 @@ import storage.FileStorage;
 import storage.Storage;
 import vk.Bot;
 import vk.Conversation;
+import vk.VkConversation;
 
 public class Main {
 
@@ -23,7 +24,7 @@ public class Main {
 
     public Main() throws Exception {
         avitoChecker = new AvitoChecker();
-        bot = new Bot();
+        bot = Bot.getInstance();
         storage = new FileStorage();
         logicModule = new LogicModule(avitoChecker, bot, storage);
 
@@ -39,7 +40,7 @@ public class Main {
 
     private void load() {
         for (Pair<String, Integer> pair : storage.load()) {
-            logicModule.addRequest(new Conversation(pair.getValue()), new AvitoUrl(pair.getKey()));
+            logicModule.addRequest(new VkConversation(pair.getValue()), new AvitoUrl(pair.getKey()));
         }
     }
 }
