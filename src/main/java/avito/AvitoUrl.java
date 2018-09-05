@@ -12,4 +12,11 @@ public class AvitoUrl implements Url {
     public String getUrl() {
         return url;
     }
+
+    @Override
+    public String toString() {
+        return "AvitoUrl{" +
+                "url='" + url + '\'' +
+                '}';
+    }
 }

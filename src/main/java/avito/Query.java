@@ -52,6 +52,10 @@ class Query implements Iterable<Announcement> {
         return url;
     }
 
+    boolean contains(IListener listener) {
+        return listeners.contains(listener);
+    }
+
     @Override
     public Iterator<Announcement> iterator() {
         return new QueryIterator();

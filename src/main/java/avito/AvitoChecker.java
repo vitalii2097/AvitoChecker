@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 class Checker implements Runnable {
 
@@ -65,6 +66,14 @@ public class AvitoChecker {
 
     public void clearListener(IListener listener) {
         queries.values().forEach(query -> query.dropListener(listener));
+    }
+
+    public List<Url> getUrls(IListener listener) {
+        return queries.values()
+                .stream()
+                .filter(query -> query.contains(listener))
+                .map(Query::getUrl)
+                .collect(Collectors.toList());
     }
 
 }

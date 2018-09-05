@@ -12,6 +12,7 @@ import vk.Bot;
 import vk.Conversation;
 
 import java.util.Date;
+import java.util.List;
 
 public class LogicModule {
 
@@ -36,11 +37,39 @@ public class LogicModule {
                 conversation.send("Все ссылки были удалены");
                 break;
             }
+            case "urls" : {
+                List<Url> urls = avitoChecker.getUrls(new VkListener(Bot.getInstance(), conversation));
+                StringBuilder result = new StringBuilder();
+                for (Url url : urls) {
+                    result.append(url.getUrl()).append('\n');
+                }
+                conversation.send(result.length() == 0 ? "Запросов нет" : result.toString());
+                break;
+            }
+            case "" : {
+                conversation.send("Было прислано пустое сообщение. Возможно vk заменил текст на ссылку");
+                break;
+            }
+            case "help" : {
+                conversation.send("Avito Notifier by VEP\n" +
+                        "Команды:\n" +
+                        "help - даёт справку\n" +
+                        "urls - возвращает активные запросы в этом диалоге\n" +
+                        "clear - удаляет все запросы\n" +
+                        "test - проверяет работает ли бот вообще\n" +
+                        "Все остальные сообщения расцениваются, как ссылки.");
+                break;
+            }
             default: {
-                Url url = new AvitoUrl(message);
-                addRequest(conversation, url);
+                if (message.length() < 26) {
+                    conversation.send("Слишком короткая ссылка");
+                } else {
+                    Url url = new AvitoUrl(message);
+                    addRequest(conversation, url);
 
-                storage.add(new Pair<>(message, (int)conversation.getId()));
+                    storage.add(new Pair<>(message, (int) conversation.getId()));
+                    conversation.send("Добавлен запрос с адресом " + url.getUrl());
+                }
             }
         }
 
