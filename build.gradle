@@ -9,6 +9,7 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -29,4 +30,10 @@ dependencies {
     compile 'org.postgresql:postgresql:9.4-1206-jdbc42'
 
     compile 'org.postgresql:postgresql:42.1.1'
+
+    compile 'com.github.vitalii2097:AvitoDriver:master-SNAPSHOT'
+
+    // https://mvnrepository.com/artifact/org.telegram/telegrambots
+    compile group: 'org.telegram', name: 'telegrambots', version: '4.1'
+
 }

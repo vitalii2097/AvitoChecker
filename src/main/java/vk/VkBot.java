@@ -9,6 +9,7 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.photos.PhotoUpload;
+import logic.LogicModule;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -21,10 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Bot {
-
-
-
+public class VkBot {
     private final int groupId = 170549975;
     private final String accessToken = "75aadc0f278b4608ad5fa5baca2ab0aab9d6f45f0573c389455dcebc0bd620968d61119aef09333e4b546";
     private final static Random random = new Random();
@@ -32,17 +30,35 @@ public class Bot {
     private final GroupActor actor;
     private final HttpTransportClient client;
     private final Gson gson = new Gson();
+    private LogicModule logicModule;
 
-    private Bot() {
-        client = new HttpTransportClient();
-        apiClient = new VkApiClient(client);
-
-        actor = new GroupActor(groupId, accessToken);
+    public void setLogicModule(LogicModule logicModule) {
+        this.logicModule = logicModule;
     }
 
-    private static volatile Bot instance = new Bot();
+    private VkBot() throws Exception {
+        client = new HttpTransportClient();
+        apiClient = new VkApiClient(client);
+        actor = new GroupActor(groupId, accessToken);
 
-    public static Bot getInstance() {
+        /*Server server = new Server(80);
+        server.setHandler(new RequestHandler(logicModule, "ee825fd8"));
+
+        server.start();
+        server.join();*/
+    }
+
+    private static volatile VkBot instance;
+
+    static {
+        try {
+            instance = new VkBot();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static VkBot getInstance() {
         return instance;
     }
 
@@ -51,6 +67,7 @@ public class Bot {
         InputStream is = url.openStream();
 
         File file = new File(System.nanoTime() + ".jpg");
+        //noinspection ResultOfMethodCallIgnored
         file.createNewFile();
         OutputStream os = new FileOutputStream(file);
 
@@ -96,6 +113,7 @@ public class Bot {
 
         String answer = uploadFile(file, photoUpload.getUploadUrl());
 
+        //noinspection ResultOfMethodCallIgnored
         file.delete();
 
         JsonObject requestJson = gson.fromJson(answer, JsonObject.class);
@@ -110,8 +128,8 @@ public class Bot {
         if (photos.size() == 0) {
             throw new IOException();
         }
-        JsonObject photo = photos.get(0).getAsJsonObject();
 
+        JsonObject photo = photos.get(0).getAsJsonObject();
         return "photo"
                 + photo.get("owner_id").getAsString()
                 + "_"
@@ -119,15 +137,14 @@ public class Bot {
 
     }
 
-    public void sendMessage(Conversation conversation, String text, List<String> imageUrls) {
+    void sendMessage(Conversation conversation, String text, List<String> imageUrls) {
         List<String> images = new ArrayList<>();
 
         for (String imageUrl : imageUrls) {
             try {
                 images.add(uploadImageToVk(imageUrl));
-            }
-            catch (IOException e) {
-                System.out.println("Неудалось загрузить фотографию");
+            } catch (IOException e) {
+                System.out.println("Не удалось загрузить фотографию");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -138,7 +155,7 @@ public class Bot {
                     .send(actor)
                     .message(text)
                     .attachment(images)
-                    .peerId((int)conversation.getId())
+                    .peerId((int) conversation.getId())
                     .randomId(random.nextInt())
                     .execute();
         } catch (ApiException | ClientException e) {

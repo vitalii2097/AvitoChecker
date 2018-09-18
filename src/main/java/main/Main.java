@@ -1,21 +1,19 @@
 package main;
 
-import avito.AvitoChecker;
-import avito.AvitoUrl;
-import core.VkListener;
-import javafx.util.Pair;
-import org.eclipse.jetty.server.Server;
+import checker.AvitoChecker;
+import logic.LogicHandler;
+import logic.LogicModule;
+import observers.TeleObserver;
+import observers.VkObserver;
 import storage.FileStorage;
 import storage.Storage;
-import vk.Bot;
-import vk.Conversation;
-import vk.VkConversation;
+import sun.rmi.runtime.Log;
+import telegram.TeleBot;
+import vk.VkBot;
 
 public class Main {
 
     private final AvitoChecker avitoChecker;
-    private final Bot bot;
-    private final LogicModule logicModule;
     private final Storage storage;
 
     public static void main(String[] args) throws Exception {
@@ -24,23 +22,26 @@ public class Main {
 
     public Main() throws Exception {
         avitoChecker = new AvitoChecker();
-        bot = Bot.getInstance();
         storage = new FileStorage();
-        logicModule = new LogicModule(avitoChecker, bot, storage);
 
-        load();
+        //load();
 
-        Server server = new Server(80);
-        server.setHandler(new RequestHandler(logicModule, "ee825fd8"));
+        VkBot vkBot = VkBot.getInstance();
+        LogicModule vkLogicModule = new LogicModule(avitoChecker, VkObserver.class);
+        vkBot.setLogicModule(vkLogicModule);
 
-
-        server.start();
-        server.join();
+        TeleBot teleBot = TeleBot.getInstance();
+        LogicModule teleLogicModule = new LogicModule(avitoChecker, TeleObserver.class);
+        teleBot.setLogicModule(teleLogicModule);
     }
 
-    private void load() {
+    /*private void load() {
         for (Pair<String, Integer> pair : storage.load()) {
-            logicModule.addRequest(new VkConversation(pair.getValue()), new AvitoUrl(pair.getKey()));
+            try {
+                logicModule.addRequest(new VkConversation(pair.getValue()), new AvitoUrl(pair.getKey()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-    }
+    }*/
 }

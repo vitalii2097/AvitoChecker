@@ -1,8 +1,8 @@
-package core;
+package observers;
 
-import avito.net.Announcement;
+import me.veppev.avitodriver.Announcement;
 
-public class TestListener extends IListener {
+public class TestObserver extends Observer {
 
     @Override
     void action(Announcement announcement) {

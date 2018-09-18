@@ -1,8 +1,10 @@
-package avito;
+package checker;
 
-import avito.net.Announcement;
-import avito.net.AvitoDriver;
-import core.IListener;
+import checker.appreciation.GlobalAppraiser;
+import me.veppev.avitodriver.Announcement;
+import me.veppev.avitodriver.AvitoDriver;
+import me.veppev.avitodriver.AvitoUrl;
+import observers.Observer;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,12 +19,16 @@ class Checker implements Runnable {
 
     private Query query;
     private AvitoDriver driver;
+    private static GlobalAppraiser appraiser = new GlobalAppraiser();
 
     private void updateQuery() {
-        System.out.println("start load " + new Date());
+        System.out.println("start load query " + query + " at " + new Date());
         List<Announcement> announcements = driver.getAnnouncements(query.getUrl());
-        announcements.forEach(query::addAnnouncement);
-        System.out.println("Updated query: " + query);
+        for (Announcement announcement : announcements) {
+            CheckedAnnouncement checkedAnnouncement = appraiser.appreciate(announcement);
+            query.addAnnouncement(checkedAnnouncement);
+        }
+        System.out.println("Updated query: " + query + " at " + new Date());
     }
 
     Checker(Query query, AvitoDriver driver) {
@@ -41,15 +47,11 @@ class Checker implements Runnable {
 
 public class AvitoChecker {
 
-    private Map<Url, Query> queries;
-    private AvitoDriver driver = new AvitoDriver();
+    private Map<AvitoUrl, Query> queries = new HashMap<>();
+    private AvitoDriver driver = AvitoDriver.getInstance();
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 
-    public AvitoChecker() {
-        queries = new HashMap<>();
-    }
-
-    public void addListener(IListener listener, Url url) {
+    public void addObserver(Observer observer, AvitoUrl url) {
         if (!queries.containsKey(url)) {
             Query query = new Query(url);
             queries.put(url, query);
@@ -60,18 +62,18 @@ public class AvitoChecker {
         }
 
         Query query = queries.get(url);
-        query.addListener(listener);
-        System.out.println("Added new listener=" + listener + " to query=" + query);
+        query.addObserver(observer);
+        System.out.println("Added new observer=" + observer + " to query=" + query);
     }
 
-    public void clearListener(IListener listener) {
-        queries.values().forEach(query -> query.dropListener(listener));
+    public void clearUrlsOfObserver(Observer observer) {
+        queries.values().forEach(query -> query.dropListener(observer));
     }
 
-    public List<Url> getUrls(IListener listener) {
+    public List<AvitoUrl> getUrlsOfObserver(Observer observer) {
         return queries.values()
                 .stream()
-                .filter(query -> query.contains(listener))
+                .filter(query -> query.contains(observer))
                 .map(Query::getUrl)
                 .collect(Collectors.toList());
     }

@@ -1,18 +1,30 @@
 package vk;
 
+import logic.LogicHandler;
+import logic.LogicModule;
+
 import java.util.List;
 import java.util.Objects;
 
 public abstract class Conversation {
 
     private long id;
+    private LogicHandler logicHandler;
 
     public Conversation(long id) {
         this.id = id;
     }
 
+    public void setLogicHandler(LogicHandler logicHandler) {
+        this.logicHandler = logicHandler;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void calculate(String message) {
+        logicHandler.handle(message);
     }
 
     public abstract void send(String message);
@@ -29,7 +41,6 @@ public abstract class Conversation {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id);
     }
 }

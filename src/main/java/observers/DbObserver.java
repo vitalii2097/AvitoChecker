@@ -1,16 +1,16 @@
-package core;
+package observers;
 
-import avito.Url;
-import avito.net.Announcement;
 import db.AnnouncementDao;
 import db.DbAnnouncement;
+import me.veppev.avitodriver.Announcement;
+import me.veppev.avitodriver.AvitoUrl;
 
-public class DbListener extends IListener {
+public class DbObserver extends Observer {
 
     private AnnouncementDao announcementDao = new AnnouncementDao();
-    private final Url requestUrl;
+    private final AvitoUrl requestUrl;
 
-    public DbListener(Url requestUrl) {
+    public DbObserver(AvitoUrl requestUrl) {
         this.requestUrl = requestUrl;
     }
 
@@ -23,7 +23,7 @@ public class DbListener extends IListener {
         dbAnnouncement.setPrice(announcement.getPrice());
         dbAnnouncement.setUrl(announcement.getUrl());
 
-        dbAnnouncement.setRequestUrl(requestUrl.getUrl());
+        dbAnnouncement.setRequestUrl(requestUrl.toString());
 
         announcementDao.save(dbAnnouncement);
     }
