@@ -1,4 +1,4 @@
-package appreciation;
+package logic.appreciation;
 
 import me.veppev.avitodriver.Announcement;
 
@@ -9,14 +9,27 @@ public class CheckedAnnouncement {
 
     private Announcement announcement;
     private Mark mark;
+    private String model;
 
     public CheckedAnnouncement(Announcement announcement) {
         this.announcement = announcement;
-        mark = Mark.NOT_MARKED;
+        mark = Mark.NM;
     }
 
     public void setMark(Mark mark) {
         this.mark = mark;
+    }
+
+    public void setAnnouncement(Announcement announcement) {
+        this.announcement = announcement;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public Announcement getAnnouncement() {
@@ -30,7 +43,9 @@ public class CheckedAnnouncement {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(mark)
+        builder.append(mark.name())
+                .append("\n")
+                .append(model)
                 .append('\n')
                 .append('•')
                 .append(announcement.getName())

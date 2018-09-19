@@ -34,6 +34,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     compile group: 'org.telegram', name: 'telegrambots', version: '4.1'
 
-    compile 'com.github.vitalii2097:AvitoDriver:e117e6c0e7851cf14ec399683e61feb35746c723'
+    compile 'com.github.vitalii2097:AvitoDriver:24cb69192ae36d8c76caee24b7f877bba6444349'
 
 }

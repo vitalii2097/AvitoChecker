@@ -18,12 +18,11 @@ public abstract class Observer {
     public final void notifyNewAnnouncement() {
         while (announcementIterator.hasNext()) {
             Announcement newAnn = announcementIterator.next();
-            System.out.println("Слушатель " + this + " уведомлён о " + newAnn);
             action(newAnn);
         }
     }
 
-    abstract void action(Announcement announcement);
+    protected abstract void action(Announcement announcement);
 
 
 }

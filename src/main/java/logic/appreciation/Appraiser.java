@@ -1,4 +1,4 @@
-package appreciation;
+package logic.appreciation;
 
 import me.veppev.avitodriver.Announcement;
 
