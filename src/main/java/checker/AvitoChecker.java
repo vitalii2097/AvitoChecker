@@ -1,10 +1,11 @@
 package checker;
 
-import checker.appreciation.GlobalAppraiser;
 import me.veppev.avitodriver.Announcement;
 import me.veppev.avitodriver.AvitoDriver;
 import me.veppev.avitodriver.AvitoUrl;
 import observers.Observer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,22 +20,23 @@ class Checker implements Runnable {
 
     private Query query;
     private AvitoDriver driver;
-    private static GlobalAppraiser appraiser = new GlobalAppraiser();
+    static final Logger checkerLogger = LogManager.getLogger(Checker.class.getSimpleName());
 
     private void updateQuery() {
-        System.out.println("start load query " + query + " at " + new Date());
+        checkerLogger.info("Началось обновление запроса {}", query);
         List<Announcement> announcements = driver.getAnnouncements(query.getUrl());
+        checkerLogger.info("Драйвер загрузил {} объявлений по запросу {}", announcements.size(), query);
         for (Announcement announcement : announcements) {
-            CheckedAnnouncement checkedAnnouncement = appraiser.appreciate(announcement);
-            query.addAnnouncement(checkedAnnouncement);
+            query.addAnnouncement(announcement);
         }
-        System.out.println("Updated query: " + query + " at " + new Date());
+        checkerLogger.info("Обновлён запрос ", query);
     }
 
     Checker(Query query, AvitoDriver driver) {
         this.query = query;
         this.driver = driver;
 
+        checkerLogger.info("Первоначальная загрузка объявлений по запросу {} для нового {}", query, this);
         updateQuery();
     }
 
@@ -50,20 +52,21 @@ public class AvitoChecker {
     private Map<AvitoUrl, Query> queries = new HashMap<>();
     private AvitoDriver driver = AvitoDriver.getInstance();
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+    static final Logger avitoLogger = LogManager.getLogger(AvitoChecker.class.getSimpleName());
 
     public void addObserver(Observer observer, AvitoUrl url) {
         if (!queries.containsKey(url)) {
             Query query = new Query(url);
             queries.put(url, query);
+            avitoLogger.info("Добавлен новый запрос для мониторинга; query={}", query);
 
             int seconds = new Date().getSeconds();
             scheduler.scheduleAtFixedRate(new Checker(query, driver), 65 - seconds, 60, TimeUnit.SECONDS);
-            System.out.println("Added new query: " + query);
         }
 
         Query query = queries.get(url);
         query.addObserver(observer);
-        System.out.println("Added new observer=" + observer + " to query=" + query);
+        avitoLogger.info("Добавлен новый слушатель {} к запросу {}", observer, query);
     }
 
     public void clearUrlsOfObserver(Observer observer) {

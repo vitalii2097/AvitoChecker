@@ -31,9 +31,9 @@ dependencies {
 
     compile 'org.postgresql:postgresql:42.1.1'
 
-    compile 'com.github.vitalii2097:AvitoDriver:master-SNAPSHOT'
-
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     compile group: 'org.telegram', name: 'telegrambots', version: '4.1'
+
+    compile 'com.github.vitalii2097:AvitoDriver:e117e6c0e7851cf14ec399683e61feb35746c723'
 
 }

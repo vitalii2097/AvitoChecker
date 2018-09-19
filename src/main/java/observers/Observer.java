@@ -1,16 +1,14 @@
 package observers;
 
-import checker.CheckedAnnouncement;
 import me.veppev.avitodriver.Announcement;
-import vk.Conversation;
 
 import java.util.Iterator;
 
 public abstract class Observer {
 
-    private Iterator<CheckedAnnouncement> announcementIterator;
+    private Iterator<Announcement> announcementIterator;
 
-    public final void setIterator(Iterator<CheckedAnnouncement> announcementIterator) {
+    public final void setIterator(Iterator<Announcement> announcementIterator) {
         this.announcementIterator = announcementIterator;
         while (announcementIterator.hasNext()) {
             announcementIterator.next();
@@ -19,14 +17,13 @@ public abstract class Observer {
 
     public final void notifyNewAnnouncement() {
         while (announcementIterator.hasNext()) {
-            action(announcementIterator.next());
+            Announcement newAnn = announcementIterator.next();
+            System.out.println("Слушатель " + this + " уведомлён о " + newAnn);
+            action(newAnn);
         }
     }
 
-    abstract void action(CheckedAnnouncement announcement);
+    abstract void action(Announcement announcement);
 
-    public void setConversation(Conversation conversation) {
-
-    }
 
 }

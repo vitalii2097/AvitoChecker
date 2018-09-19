@@ -1,6 +1,5 @@
-package checker.appreciation;
+package appreciation;
 
-import checker.CheckedAnnouncement;
 import me.veppev.avitodriver.Announcement;
 
 public interface Appraiser {

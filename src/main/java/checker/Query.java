@@ -1,17 +1,17 @@
 package checker;
 
-import observers.Observer;
 import me.veppev.avitodriver.Announcement;
 import me.veppev.avitodriver.AvitoUrl;
+import observers.Observer;
 
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-class Query implements Iterable<CheckedAnnouncement> {
+class Query implements Iterable<Announcement> {
 
     private final AvitoUrl url;
-    private List<CheckedAnnouncement> announcements;
+    private List<Announcement> announcements;
     private Set<Observer> observers;
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(20);
 
@@ -23,12 +23,10 @@ class Query implements Iterable<CheckedAnnouncement> {
 
     @Override
     public String toString() {
-        return "checker.Query{" +
-                "url=" + url +
-                '}';
+        return url.toString();
     }
 
-    void addAnnouncement(CheckedAnnouncement announcement) {
+    void addAnnouncement(Announcement announcement) {
         if (!announcements.contains(announcement)) {
             announcements.add(announcement);
             for (Observer observer : observers) {
@@ -58,11 +56,11 @@ class Query implements Iterable<CheckedAnnouncement> {
     }
 
     @Override
-    public Iterator<CheckedAnnouncement> iterator() {
+    public Iterator<Announcement> iterator() {
         return new QueryIterator();
     }
 
-    private class QueryIterator implements Iterator<CheckedAnnouncement> {
+    private class QueryIterator implements Iterator<Announcement> {
 
         private int index = 0;
 
@@ -72,7 +70,7 @@ class Query implements Iterable<CheckedAnnouncement> {
         }
 
         @Override
-        public CheckedAnnouncement next() {
+        public Announcement next() {
             return announcements.get(index++);
         }
     }

@@ -1,20 +1,13 @@
 package main;
 
 import checker.AvitoChecker;
-import logic.LogicHandler;
-import logic.LogicModule;
-import observers.TeleObserver;
-import observers.VkObserver;
-import storage.FileStorage;
-import storage.Storage;
-import sun.rmi.runtime.Log;
-import telegram.TeleBot;
-import vk.VkBot;
+import me.veppev.avitodriver.AvitoUrl;
+import observers.Observer;
+import observers.TestObserver;
 
 public class Main {
 
     private final AvitoChecker avitoChecker;
-    private final Storage storage;
 
     public static void main(String[] args) throws Exception {
         new Main();
@@ -22,26 +15,12 @@ public class Main {
 
     public Main() throws Exception {
         avitoChecker = new AvitoChecker();
-        storage = new FileStorage();
 
-        //load();
+        Observer observer = new TestObserver();
+        AvitoUrl avitoUrl = new AvitoUrl("https://www.avito.ru/rossiya/telefony/iphone?pmax=50000&pmin=3000&s=104&user=1&s_trg=3");
 
-        VkBot vkBot = VkBot.getInstance();
-        LogicModule vkLogicModule = new LogicModule(avitoChecker, VkObserver.class);
-        vkBot.setLogicModule(vkLogicModule);
+        avitoChecker.addObserver(observer, avitoUrl);
 
-        TeleBot teleBot = TeleBot.getInstance();
-        LogicModule teleLogicModule = new LogicModule(avitoChecker, TeleObserver.class);
-        teleBot.setLogicModule(teleLogicModule);
     }
 
-    /*private void load() {
-        for (Pair<String, Integer> pair : storage.load()) {
-            try {
-                logicModule.addRequest(new VkConversation(pair.getValue()), new AvitoUrl(pair.getKey()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 }

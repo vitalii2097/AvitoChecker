@@ -1,4 +1,4 @@
-package checker;
+package appreciation;
 
 public enum Mark {
     A(Integer.MAX_VALUE, 10_000),
@@ -20,11 +20,15 @@ public enum Mark {
 
     public static Mark getMark(int profit) {
         for (Mark mark : Mark.values()) {
-            if (mark.max < profit && mark.min >= profit) {
+            if (mark.max > profit && mark.min <= profit) {
                 return mark;
             }
         }
         return NOT_MARKED;
     }
 
+    @Override
+    public String toString() {
+        return name() + " " + min + " - " + max;
+    }
 }
