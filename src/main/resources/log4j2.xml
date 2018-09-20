@@ -45,6 +45,22 @@
             <AppenderRef ref="MyFile"/>
         </Logger>
 
+        <Logger name="Observer" level="all">
+            <AppenderRef ref="MyFile"/>
+        </Logger>
+
+        <Logger name="LogicModule" level="all">
+            <AppenderRef ref="MyFile"/>
+        </Logger>
+
+        <Logger name="TgConversation" level="all">
+            <AppenderRef ref="MyFile"/>
+        </Logger>
+
+        <Logger name="TgBot" level="all">
+            <AppenderRef ref="MyFile"/>
+        </Logger>
+
         <Root level="warn">
             <AppenderRef ref="Console"/>
         </Root>

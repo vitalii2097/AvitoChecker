@@ -3,6 +3,8 @@ package checker;
 import me.veppev.avitodriver.Announcement;
 import me.veppev.avitodriver.AvitoUrl;
 import observers.Observer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -14,11 +16,13 @@ class Query implements Iterable<Announcement> {
     private List<Announcement> announcements;
     private Set<Observer> observers;
     private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(20);
+    static final Logger queryLogger = LogManager.getLogger(Query.class.getSimpleName());
 
     Query(AvitoUrl url) {
         this.url = url;
         announcements = new ArrayList<>();
         observers = new HashSet<>();
+        queryLogger.debug("Создано хранилище запросов Query с url={}", url);
     }
 
     @Override
@@ -27,7 +31,9 @@ class Query implements Iterable<Announcement> {
     }
 
     void addAnnouncement(Announcement announcement) {
+        queryLogger.debug("Попытка добавить новое объявление {} к запросу {}", announcement.getUrl(), this);
         if (!announcements.contains(announcement)) {
+            queryLogger.info("К {} добавлено новое объявление {}", this, announcement.getUrl());
             announcements.add(announcement);
             for (Observer observer : observers) {
                 scheduler.execute(observer::notifyNewAnnouncement);
@@ -39,6 +45,7 @@ class Query implements Iterable<Announcement> {
         if (observers.contains(observer)) {
             return;
         }
+        queryLogger.info("К запросу {} добавлен новый слушатель {}", this, observer);
         observers.add(observer);
         observer.setIterator(iterator());
     }

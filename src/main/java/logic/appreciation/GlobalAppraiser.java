@@ -6,7 +6,7 @@ public class GlobalAppraiser implements Appraiser {
 
     @Override
     public CheckedAnnouncement appreciate(Announcement announcement) {
-        if (announcement.getUrl().toLowerCase().contains("iphone")) {
+        if (announcement.getUrl().toLowerCase().contains("telefony")) {
             return new IPhoneAppraiser().appreciate(announcement);
         } else {
             return new CheckedAnnouncement(announcement);

@@ -1,13 +1,12 @@
 package logic.appreciation;
 
 public enum Mark {
-    A(100_000, 10_000, 5),
-    B(10_000, 5_000, 4),
-    C(5_000, 3_000, 3),
-    D(3_000, 1_000, 2),
-    E(1_000, 0, 1),
-    F(0, -100_000, 0),
-    NM(0, 0, Integer.MAX_VALUE);
+    Ultra(100_000, 10_000, 5),
+    High(10_000, 5_000, 4),
+    Medium(5_000, 3_000, 3),
+    Low(3_000, 0, 2),
+    Negative(0, -100_000, 1),
+    Unknown(0, 0, Integer.MAX_VALUE);
 
     private final int min;
     private final int max;
@@ -29,7 +28,7 @@ public enum Mark {
                 return mark;
             }
         }
-        return NM;
+        return Unknown;
     }
 
     @Override

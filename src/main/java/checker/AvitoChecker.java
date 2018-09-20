@@ -54,6 +54,10 @@ public class AvitoChecker {
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
     static final Logger avitoLogger = LogManager.getLogger(AvitoChecker.class.getSimpleName());
 
+    public AvitoChecker() {
+        avitoLogger.debug("Создан экземпляр AvitoChecker");
+    }
+
     public void addObserver(Observer observer, AvitoUrl url) {
         if (!queries.containsKey(url)) {
             Query query = new Query(url);
@@ -71,9 +75,11 @@ public class AvitoChecker {
 
     public void clearUrlsOfObserver(Observer observer) {
         queries.values().forEach(query -> query.dropListener(observer));
+        avitoLogger.info("Очищены все ссылки {}", observer);
     }
 
     public List<AvitoUrl> getUrlsOfObserver(Observer observer) {
+        avitoLogger.info("Запрос на получение всех ссылок слушателя {}", observer);
         return queries.values()
                 .stream()
                 .filter(query -> query.contains(observer))

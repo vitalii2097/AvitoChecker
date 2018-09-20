@@ -12,10 +12,17 @@ import static logic.appreciation.Model.*;
 
 
 enum Model {
-    FiveS("5s[^i]", "5s"),
+    Two("2g", "2g"),
+    Three("3g", "3g"),
+    ThreeS("3gs", "3gs"),
+    Four("4", "4"),
+    FourS("4s[^i]?", "4s"),
+    Five("5", "5"),
+    FiveS("5(s|с)[^ie]?", "5s"),
+    SE("5?se", "se"),
     Six("6", "6"),
     SixP("(6plus)|(6\\+)", "6Plus"),
-    SixS("6s[^i]", "6s"),
+    SixS("6s[^i]?", "6s"),
     SixPS("(6splus)|(6s\\+)", "6s Plus"),
     Seven("7", "7"),
     SevenP("(7plus)|(7\\+)", "7Plus"),
@@ -37,13 +44,13 @@ enum Model {
 
     public boolean equalsByName(Announcement announcement) {
         String annName = announcement.getName().replaceAll(" ", "").toLowerCase();
-        Pattern p = Pattern.compile("(iphone" + engName + ")|(айфон" + engName + ")");
+        Pattern p = Pattern.compile("(i?phone(apple)?" + engName + ")|(айфон" + engName + ")");
         return p.matcher(annName).find();
     }
 
     public boolean equalsByDescription(Announcement announcement) {
         String annDesc = announcement.getDescription().replaceAll(" ", "").toLowerCase();
-        Pattern p = Pattern.compile("(iphone" + engName + ")|(айфон" + engName + ")");
+        Pattern p = Pattern.compile("(i?phone(apple)?" + engName + ")|(айфон" + engName + ")");
         return p.matcher(annDesc).find();
     }
 
@@ -132,9 +139,9 @@ enum IPhone {
     M6PS_32(SixPS, M32, 14000),
     M6PS_64(SixPS, M64, 15000),
     M6PS_128(SixPS, M128, 16000),
-    M7_32(Seven, M32, 17000),
-    M7_128(Seven, M128, 20000),
-    M7_256(Seven, M256, 23000),
+    M7_32(Seven, M32, 20000),
+    M7_128(Seven, M128, 25000),
+    M7_256(Seven, M256, 27000),
     M7P_32(SevenP, M32, 25000),
     M7P_128(SevenP, M128, 27000),
     M7P_256(SevenP, M256, 32000),
@@ -197,14 +204,25 @@ public class IPhoneAppraiser implements Appraiser {
 
     @Override
     public CheckedAnnouncement appreciate(Announcement announcement) {
+
         CheckedAnnouncement checkedAnnouncement = new CheckedAnnouncement(announcement);
         Model model = Model.getModel(announcement);
         Memory memory = Memory.getMemory(announcement);
         Pair<Integer, Integer> profit = new Pair<>(0, 0);
 
         if (model == null) {
-            checkedAnnouncement.setMark(NM);
+            checkedAnnouncement.setMark(Unknown);
         } else {
+            if (model == Two
+                    || model == Three
+                    || model == ThreeS
+                    || model == Four
+                    || model == FourS
+                    || model == Five
+                    || model == SE
+                    || model == FiveS) {
+                checkedAnnouncement.setMark(Negative);
+            }
             if (memory == null) {
                 Mark mark = Mark.getMark(IPhone.getMaxSellingPrice(model)- announcement.getPrice());
                 checkedAnnouncement.setMark(mark);
@@ -221,14 +239,11 @@ public class IPhoneAppraiser implements Appraiser {
             }
         }
 
-        checkedAnnouncement.setModel("Профит "
-                + (profit.getKey().equals(profit.getValue())
-                ? profit.getKey()
-                : (profit.getKey() + " - " + profit.getValue()))
-                + "\niPhone "
+        checkedAnnouncement.setModel("iPhone "
                 + (model == null ? "?" : model.toString())
                 + " "
                 + (memory == null ? "?" : memory.toString()));
+        checkedAnnouncement.setProfit(profit.getKey(), profit.getValue());
 
         return checkedAnnouncement;
     }

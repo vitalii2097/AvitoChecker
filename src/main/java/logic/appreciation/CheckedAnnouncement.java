@@ -10,10 +10,12 @@ public class CheckedAnnouncement {
     private Announcement announcement;
     private Mark mark;
     private String model;
+    private int minProfit;
+    private int maxProfit;
 
     public CheckedAnnouncement(Announcement announcement) {
         this.announcement = announcement;
-        mark = Mark.NM;
+        mark = Mark.Unknown;
     }
 
     public void setMark(Mark mark) {
@@ -26,6 +28,20 @@ public class CheckedAnnouncement {
 
     public String getModel() {
         return model;
+    }
+
+    public int getMinProfit() {
+        return minProfit;
+    }
+
+    public int getMaxProfit() {
+
+        return maxProfit;
+    }
+
+    public void setProfit(int minProfit, int maxProfit) {
+        this.minProfit = minProfit;
+        this.maxProfit = maxProfit;
     }
 
     public void setModel(String model) {
@@ -44,7 +60,7 @@ public class CheckedAnnouncement {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(mark.name())
-                .append("\n")
+                .append(" profit (" + minProfit + " - " + maxProfit + ")")
                 .append(model)
                 .append('\n')
                 .append('•')
@@ -61,7 +77,7 @@ public class CheckedAnnouncement {
         } else {
             builder.append(announcement.getDescription());
         }
-        builder.append('\n').append(announcement.getUrl());
+        builder.append("\n=").append(announcement.getUrl());
         return builder.toString();
     }
 

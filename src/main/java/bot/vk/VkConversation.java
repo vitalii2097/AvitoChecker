@@ -29,5 +29,13 @@ public class VkConversation extends Conversation {
     public long getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "VkConversation{" +
+                "bot=" + bot +
+                ", id=" + id +
+                '}';
+    }
 }
 

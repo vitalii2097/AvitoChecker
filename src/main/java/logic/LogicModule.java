@@ -7,6 +7,8 @@ import logic.appreciation.Mark;
 import me.veppev.avitodriver.Announcement;
 import me.veppev.avitodriver.AvitoUrl;
 import observers.Observer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Date;
@@ -17,23 +19,27 @@ public class LogicModule extends Observer {
     private final Conversation conversation;
     private final AvitoChecker avitoChecker;
     private final static GlobalAppraiser appraiser = new GlobalAppraiser();
-    private Mark minMark = Mark.F;
+    private Mark minMark = Mark.Negative;
+    private final Logger logicLogger = LogManager.getLogger(LogicModule.class.getSimpleName());
 
     public LogicModule(Conversation conversation, AvitoChecker avitoChecker) {
         this.conversation = conversation;
         this.avitoChecker = avitoChecker;
         conversation.setLogicModule(this);
 
+        logicLogger.debug("Создан новый экземпляр LogicModule {} для диалога {}", this, conversation);
         conversation.send("Приветствую. К данному диалогу подключился логический модуль " + this);
         conversation.send("Введите help для справки");
     }
 
     @Override
     protected void action(Announcement announcement) {
+
         CheckedAnnouncement checkedAnnouncement = appraiser.appreciate(announcement);
         Mark mark = checkedAnnouncement.getMark();
+        logicLogger.info("Объявление {} оцененно на {}", announcement, mark.name());
         if (mark.getValue() >= minMark.getValue()) {
-            conversation.send(checkedAnnouncement.toString(), announcement.getImageUrls());
+            conversation.send(checkedAnnouncement);
         }
         //Оценить объявление
         //В зависимости от ценности что то сделать
@@ -41,8 +47,7 @@ public class LogicModule extends Observer {
     }
 
     void notifyAboutNewMessage(String message) {
-        //Разобрать сообщение и проделать некие манипуляции
-        System.out.println(message);
+        //Разобрать сообщение и проделать некие манипуляции\
         switch(message.toLowerCase()) {
             case "time" : {
                 conversation.send(new Date().toString());
@@ -66,38 +71,32 @@ public class LogicModule extends Observer {
                 conversation.send("Было прислано пустое сообщение. Возможно, vk заменил текст на ссылку.");
                 break;
             }*/
-            case "a": {
-                minMark = Mark.A;
+            case "high": {
+                minMark = Mark.High;
                 conversation.send("Установлен уровень " + minMark.name()
                         + ". Профит от " + minMark.getMin() + "р.");
                 break;
             }
-            case "b": {
-                minMark = Mark.B;
+            case "ultra": {
+                minMark = Mark.Ultra;
                 conversation.send("Установлен уровень " + minMark.name()
                         + ". Профит от " + minMark.getMin() + "р.");
                 break;
             }
-            case "c": {
-                minMark = Mark.C;
+            case "medium": {
+                minMark = Mark.Medium;
                 conversation.send("Установлен уровень " + minMark.name()
                         + ". Профит от " + minMark.getMin() + "р.");
                 break;
             }
-            case "d": {
-                minMark = Mark.D;
+            case "low": {
+                minMark = Mark.Low;
                 conversation.send("Установлен уровень " + minMark.name()
                         + ". Профит от " + minMark.getMin() + "р.");
                 break;
             }
-            case "e": {
-                minMark = Mark.E;
-                conversation.send("Установлен уровень " + minMark.name()
-                        + ". Профит от " + minMark.getMin() + "р.");
-                break;
-            }
-            case "f": {
-                minMark = Mark.F;
+            case "all": {
+                minMark = Mark.Negative;
                 conversation.send("Установлен уровень " + minMark.name()
                         + ". Профит от " + minMark.getMin() + "р.");
                 break;
