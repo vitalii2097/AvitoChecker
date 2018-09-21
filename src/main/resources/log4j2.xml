@@ -7,6 +7,12 @@
             </PatternLayout>
         </File>
 
+        <File name="ConvFile" fileName="conv.log">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger - %msg%n"/>
         </Console>
@@ -59,6 +65,10 @@
 
         <Logger name="TgBot" level="all">
             <AppenderRef ref="MyFile"/>
+        </Logger>
+
+        <Logger name="Conversation" level="all">
+            <AppenderRef ref="ConvFile"/>
         </Logger>
 
         <Root level="warn">

@@ -20,6 +20,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static logic.Conversation.conversationLogger;
+
 public class TgBot extends Bot {
 
     private final TeleBot teleBot;
@@ -73,16 +75,19 @@ public class TgBot extends Bot {
     void sendMessage(SendMessage sendMessage) {
         try {
             teleBot.execute(sendMessage);
-
+            conversationLogger.info("Отправлено сообщение {}", sendMessage);
         } catch (TelegramApiException e) {
             tgBotLogger.error("Исключение при отправке {}", sendMessage);
             tgBotLogger.error(e);
+            conversationLogger.warn("Не удалось отправить сообщение {}", sendMessage);
             tgBotLogger.info("Попытка отправки сообщения без разметки");
             try {
                 sendMessage.enableMarkdown(false);
                 teleBot.execute(sendMessage);
+                conversationLogger.info("Отправлено сообщение без разметки {}", sendMessage);
             } catch (TelegramApiException ex) {
                 tgBotLogger.fatal(ex);
+                conversationLogger.error("Не удалось отправить сообщение без разметки {}", sendMessage);
             }
         }
     }

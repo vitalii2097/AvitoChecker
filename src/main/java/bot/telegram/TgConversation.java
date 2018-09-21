@@ -30,13 +30,14 @@ public class TgConversation extends Conversation {
         message.disableWebPagePreview();
 
         tgLogger.debug("Сформирован объект message {}", message);
+        conversationLogger.info("Отправка из диалога {} сообщения {}", this, message);
         bot.sendMessage(message);
     }
 
     @Override
     public void send(String message, List<String> photos) {
         for (String url : photos) {
-            message += "[](" + url + ")";
+            message += toHref("p", url.trim());
         }
         send(message);
     }
