@@ -150,8 +150,10 @@ public class LogicModule extends Observer {
 
                     //storage.add(new Pair<>(message, (int) conversation.getId()));
                     conversation.send("Добавлен запрос с адресом " + url.toString());
-                } catch (IOException | IllegalArgumentException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
+                } catch (IllegalArgumentException e) {
+                    logicLogger.warn("Не удалось создать новую ссылку {}" + message);
                 }
             }
         }
