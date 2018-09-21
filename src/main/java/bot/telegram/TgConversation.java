@@ -6,6 +6,7 @@ import me.veppev.avitodriver.Announcement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 
 import java.io.File;
 import java.util.List;
@@ -29,6 +30,13 @@ public class TgConversation extends Conversation {
         message.setChatId(id);
         message.setText(text);
         message.disableWebPagePreview();
+
+
+        SendPhoto photo = new SendPhoto();
+
+        SendMessage
+
+
         tgLogger.debug("Сформирован объект message {}", message);
         bot.sendMessage(message);
     }
