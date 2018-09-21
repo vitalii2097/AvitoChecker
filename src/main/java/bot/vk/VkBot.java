@@ -34,17 +34,19 @@ public class VkBot extends Bot {
     private final HttpTransportClient client;
     private final Gson gson = new Gson();
 
-    public VkBot(AvitoChecker avitoChecker) throws Exception {
+    public VkBot(AvitoChecker avitoChecker, boolean useServer) throws Exception {
         super(avitoChecker);
         client = new HttpTransportClient();
         apiClient = new VkApiClient(client);
         actor = new GroupActor(groupId, accessToken);
 
-        Server server = new Server(80);
-        server.setHandler(new RequestHandler("ee825fd8", this));
+        if (useServer) {
+            Server server = new Server(80);
+            server.setHandler(new RequestHandler("ee825fd8", this));
 
-        server.start();
-        server.join();
+            server.start();
+            server.join();
+        }
     }
 
     private String uploadFile(File file, String url) throws IOException {
