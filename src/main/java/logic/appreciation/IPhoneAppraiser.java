@@ -222,8 +222,7 @@ public class IPhoneAppraiser implements Appraiser {
                     || model == SE
                     || model == FiveS) {
                 checkedAnnouncement.setMark(Negative);
-            }
-            if (memory == null) {
+            } else if (memory == null) {
                 Mark mark = Mark.getMark(IPhone.getMaxSellingPrice(model)- announcement.getPrice());
                 checkedAnnouncement.setMark(mark);
                 profit = new Pair<>(IPhone.getMinSellingPrice(model) - announcement.getPrice(),
