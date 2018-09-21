@@ -28,7 +28,7 @@ public class TgBot extends Bot {
     private static final Integer Port = 4145;
     static final Logger tgBotLogger = LogManager.getLogger(TgBot.class.getSimpleName());
 
-    public TgBot(AvitoChecker avitoChecker) {
+    public TgBot(AvitoChecker avitoChecker, boolean useProxy) {
         super(avitoChecker);
 
         ProxyList list = new ProxyList();
@@ -40,7 +40,11 @@ public class TgBot extends Bot {
 
         DefaultBotOptions defaultBotOptions = proxyWithoutAuth(proxyServer);
 
-        teleBot = new TeleBot(defaultBotOptions);
+        if (useProxy) {
+            teleBot = new TeleBot(defaultBotOptions);
+        } else {
+            teleBot = new TeleBot();
+        }
         teleBot.setTgBot(this);
 
         try {
@@ -69,6 +73,7 @@ public class TgBot extends Bot {
     void sendMessage(SendMessage sendMessage) {
         try {
             teleBot.execute(sendMessage);
+
         } catch (TelegramApiException e) {
             tgBotLogger.error("Исключение при отправке {}", sendMessage);
             tgBotLogger.error(e);
@@ -105,18 +110,17 @@ class TeleBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.getMessage().getText() == null) {
-            return;
-        }
-        long chatId = update.getMessage().getChatId();
-        if (!conversations.containsKey(chatId)) {
-            TgConversation conversation = new TgConversation(tgBot, chatId);
-            conversations.put(chatId, conversation);
-            tgBot.addConversation(conversation);
-        }
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            long chatId = update.getMessage().getChatId();
+            if (!conversations.containsKey(chatId)) {
+                TgConversation conversation = new TgConversation(tgBot, chatId);
+                conversations.put(chatId, conversation);
+                tgBot.addConversation(conversation);
+            }
 
-        TgConversation conversation = conversations.get(chatId);
-        conversation.notifyAboutNewMessage(update.getMessage().getText());
+            TgConversation conversation = conversations.get(chatId);
+            conversation.notifyAboutNewMessage(update.getMessage().getText());
+        }
     }
 
     @Override
