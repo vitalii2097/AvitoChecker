@@ -11,6 +11,7 @@ import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.photos.PhotoUpload;
+import me.veppev.avitodriver.AvitoDriver;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -97,18 +98,23 @@ public class VkBot extends Bot {
 
     }
 
-    void sendMessage(VkConversation conversation, String text, List<File> images) {
+
+    void sendMessage(VkConversation conversation, String text, List<String> images) {
         List<String> vkUrls = new ArrayList<>();
 
-        for (File image : images) {
+        for (String image : images) {
+            File imageFile = null;
             try {
-                vkUrls.add(uploadImageToVk(image));
+                imageFile = AvitoDriver.getInstance().downloadImage(image);
+                vkUrls.add(uploadImageToVk(imageFile));
             } catch (IOException e) {
                 System.out.println("Не удалось загрузить фотографию");
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                image.delete();
+                if (imageFile != null && imageFile.exists()) {
+                    imageFile.delete();
+                }
             }
         }
 

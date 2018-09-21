@@ -2,7 +2,6 @@ package logic;
 
 import logic.appreciation.CheckedAnnouncement;
 
-import java.io.File;
 import java.util.List;
 
 public abstract class Conversation {
@@ -15,7 +14,7 @@ public abstract class Conversation {
 
     public abstract void send(String message);
 
-    public abstract void send(String message, List<File> photos);
+    public abstract void send(String message, List<String> photos);
 
     public void send(CheckedAnnouncement announcement) {
         send(announcement.toString(), announcement.getAnnouncement().getImageUrls());

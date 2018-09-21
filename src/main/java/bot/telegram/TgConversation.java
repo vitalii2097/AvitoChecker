@@ -6,9 +6,7 @@ import me.veppev.avitodriver.Announcement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 
-import java.io.File;
 import java.util.List;
 
 public class TgConversation extends Conversation {
@@ -31,18 +29,15 @@ public class TgConversation extends Conversation {
         message.setText(text);
         message.disableWebPagePreview();
 
-
-        SendPhoto photo = new SendPhoto();
-
-
-
         tgLogger.debug("Сформирован объект message {}", message);
         bot.sendMessage(message);
     }
 
     @Override
-    public void send(String message, List<File> photos) {
-        //TODO
+    public void send(String message, List<String> photos) {
+        for (String url : photos) {
+            message += "[](" + url + ")";
+        }
         send(message);
     }
 
@@ -55,7 +50,11 @@ public class TgConversation extends Conversation {
     }
 
     private String removeMarkDown(String text) {
-        return text.replaceAll("\\*", "").replaceAll("_", "__");
+
+        return text
+                .replaceAll("\\*", "")
+                .replaceAll("_", "__")
+                .replaceAll(":", "");
     }
 
     @Override

@@ -22,7 +22,7 @@ public class VkConversation extends Conversation {
     }
 
     @Override
-    public void send(String message, List<File> images) {
+    public void send(String message, List<String> images) {
         bot.sendMessage(this, message, images);
     }
 
