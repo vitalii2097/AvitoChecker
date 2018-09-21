@@ -49,13 +49,17 @@ public class LogicModule extends Observer {
     }
 
     private boolean login(String password) {
-        return (isLogin = password.equals(PASSWORD));
+        return isLogin = password.equals(PASSWORD);
     }
 
     void notifyAboutNewMessage(String message) {
 
-        if (!isLogin && !login(message)) {
-            conversation.send("Неверный пароль");
+        if (!isLogin) {
+            if (login(message)) {
+                conversation.send(this + " успешно активирован");
+            } else {
+                conversation.send("Неверный пароль");
+            }
             return;
         }
 
