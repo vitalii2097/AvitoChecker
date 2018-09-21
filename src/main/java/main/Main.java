@@ -14,7 +14,7 @@ public class Main {
         AvitoChecker avitoChecker = new AvitoChecker();
 
         //VkBot vkBot = new VkBot(avitoChecker);
-        TgBot bot = new TgBot(avitoChecker);
+        TgBot bot = new TgBot(avitoChecker, true);
     }
 
 }

@@ -34,7 +34,6 @@ public class TgConversation extends Conversation {
 
         SendPhoto photo = new SendPhoto();
 
-        SendMessage
 
 
         tgLogger.debug("Сформирован объект message {}", message);
