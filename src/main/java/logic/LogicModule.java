@@ -21,6 +21,8 @@ public class LogicModule extends Observer {
     private final static GlobalAppraiser appraiser = new GlobalAppraiser();
     private Mark minMark = Mark.Negative;
     private final Logger logicLogger = LogManager.getLogger(LogicModule.class.getSimpleName());
+    private boolean isLogin = false;
+    private final static String PASSWORD = "Валерон, лови патрон";
 
     public LogicModule(Conversation conversation, AvitoChecker avitoChecker) {
         this.conversation = conversation;
@@ -29,7 +31,7 @@ public class LogicModule extends Observer {
 
         logicLogger.debug("Создан новый экземпляр LogicModule {} для диалога {}", this, conversation);
         conversation.send("Приветствую. К данному диалогу подключился логический модуль " + this);
-        conversation.send("Введите help для справки");
+        conversation.send("Введите пароль");
     }
 
     @Override
@@ -46,7 +48,17 @@ public class LogicModule extends Observer {
         //Например передать в диалог
     }
 
+    private boolean login(String password) {
+        return (isLogin = password.equals(PASSWORD));
+    }
+
     void notifyAboutNewMessage(String message) {
+
+        if (!isLogin && !login(message)) {
+            conversation.send("Неверный пароль");
+            return;
+        }
+
         //Разобрать сообщение и проделать некие манипуляции\
         switch(message.toLowerCase()) {
             case "time" : {
