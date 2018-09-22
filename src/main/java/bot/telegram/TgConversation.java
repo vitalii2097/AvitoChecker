@@ -27,7 +27,7 @@ public class TgConversation extends Conversation {
         message.enableMarkdown(true);
         message.setChatId(id);
         message.setText(text);
-
+        message.disableWebPagePreview();
         tgLogger.debug("Сформирован объект message {}", message);
         conversationLogger.info("Отправка из диалога {} сообщения {}", this, message);
         bot.sendMessage(message);
@@ -35,9 +35,14 @@ public class TgConversation extends Conversation {
 
     @Override
     public void send(String message, List<String> photos) {
+        StringBuilder messageBuilder = new StringBuilder(message);
         for (int i = 0; i < photos.size(); i++) {
-            message += '\n' + toHref("photo" + (i + 1), photos.get(i).trim());
+            messageBuilder
+                    .append('\n')
+                    .append(i % 2 == 0 ? "" : "      ")
+                    .append(toHref("photo" + (i + 1), photos.get(i).trim()));
         }
+        message = messageBuilder.toString();
         send(message);
     }
 
@@ -70,7 +75,7 @@ public class TgConversation extends Conversation {
                                     + checkedAnnouncement.getMinProfit()
                                     + " - "
                                     + (checkedAnnouncement.getMaxProfit() > 0 ? "+" : "")
-                                    +checkedAnnouncement.getMaxProfit()
+                                    + checkedAnnouncement.getMaxProfit()
                                     + ")"
                     )
             );
@@ -88,7 +93,12 @@ public class TgConversation extends Conversation {
         builder.append("\n").append(toBold(checkedAnnouncement.getModel()));
         builder.append("\n(").append(toHref(announcement.getName(), announcement.getUrl())).append(")");
         builder.append("\n(").append(announcement.getPrice()).append('\u20BD').append(')');
-        builder.append("\n\n").append(removeMarkDown(announcement.getDescription()));
+        builder.append("\n(").append(announcement.getMetro()).append(')');
+        builder.append("\n\n").append(
+                removeMarkDown(announcement.getDescription().length() < 700
+                        ? announcement.getDescription()
+                        : announcement.getDescription().substring(0, 700) + "...")
+        );
 
         send(builder.toString(), announcement.getImageUrls());
     }
