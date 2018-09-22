@@ -50,7 +50,7 @@ enum Model {
 
     public boolean equalsByDescription(Announcement announcement) {
         String annDesc = announcement.getDescription().replaceAll(" ", "").toLowerCase();
-        Pattern p = Pattern.compile("(i?phone(apple)?" + engName + ")|(айфон" + engName + ")");
+        Pattern p = Pattern.compile("(i?phone(apple)?" + engName + ")|(айфон" + engName + ")|(\\A" + engName + ")");
         return p.matcher(annDesc).find();
     }
 
