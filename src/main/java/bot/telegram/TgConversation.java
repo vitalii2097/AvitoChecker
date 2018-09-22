@@ -35,8 +35,8 @@ public class TgConversation extends Conversation {
 
     @Override
     public void send(String message, List<String> photos) {
-        for (String url : photos) {
-            message += toHref("p", url.trim());
+        for (int i = 0; i < photos.size(); i++) {
+            message += '\n' + toHref("photo" + (i + 1), photos.get(i).trim());
         }
         send(message);
     }
