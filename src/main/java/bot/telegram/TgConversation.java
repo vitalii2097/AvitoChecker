@@ -27,7 +27,6 @@ public class TgConversation extends Conversation {
         message.enableMarkdown(true);
         message.setChatId(id);
         message.setText(text);
-        message.disableWebPagePreview();
 
         tgLogger.debug("Сформирован объект message {}", message);
         conversationLogger.info("Отправка из диалога {} сообщения {}", this, message);
