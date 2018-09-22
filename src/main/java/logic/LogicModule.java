@@ -22,7 +22,7 @@ public class LogicModule extends Observer {
     private Mark minMark = Mark.Negative;
     private final Logger logicLogger = LogManager.getLogger(LogicModule.class.getSimpleName());
     private boolean isLogin = false;
-    private final static String PASSWORD = "Валерон, лови патрон";
+    private final static String PASSWORD = "123";
 
     public LogicModule(Conversation conversation, AvitoChecker avitoChecker) {
         this.conversation = conversation;
