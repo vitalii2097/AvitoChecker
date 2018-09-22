@@ -22,7 +22,8 @@ public class LogicModule extends Observer {
     private Mark minMark = Mark.Negative;
     private final Logger logicLogger = LogManager.getLogger(LogicModule.class.getSimpleName());
     private boolean isLogin = false;
-    private final static String PASSWORD = "123";
+    private final static String PASSWORD = "veppev1997";
+    private boolean isMute = false;
 
     public LogicModule(Conversation conversation, AvitoChecker avitoChecker) {
         this.conversation = conversation;
@@ -40,7 +41,7 @@ public class LogicModule extends Observer {
         CheckedAnnouncement checkedAnnouncement = appraiser.appreciate(announcement);
         Mark mark = checkedAnnouncement.getMark();
         logicLogger.info("Объявление {} оцененно на {}", announcement, mark.name());
-        if (mark.getValue() >= minMark.getValue()) {
+        if (!isMute && mark.getValue() >= minMark.getValue()) {
             conversation.send(checkedAnnouncement);
         }
         //Оценить объявление
@@ -57,6 +58,7 @@ public class LogicModule extends Observer {
         if (!isLogin) {
             if (login(message)) {
                 conversation.send(this + " успешно активирован");
+                conversation.send("Для справки введите help");
             } else {
                 conversation.send("Неверный пароль");
             }
@@ -83,10 +85,16 @@ public class LogicModule extends Observer {
                 conversation.send(result.length() == 0 ? "Запросов нет" : result.toString());
                 break;
             }
-            /*case "" : {
-                conversation.send("Было прислано пустое сообщение. Возможно, vk заменил текст на ссылку.");
+            case "mute" : {
+                isMute = !isMute;
+                if (isMute) {
+                    conversation.send("Активирован режим \"Не беспокоить\". " +
+                            "Пока режим активен, новые объявления не будут присылаться. Чтобы выйти введите mute.");
+                } else {
+                    conversation.send("Объявления снова будут присылаться. Удачных предложений.");
+                }
                 break;
-            }*/
+            }
             case "high": {
                 minMark = Mark.High;
                 conversation.send("Установлен уровень " + minMark.name()
@@ -119,13 +127,24 @@ public class LogicModule extends Observer {
             }
             case "help" : {
                 conversation.send("Avito Notifier by VEP\n" +
-                        "Команды:\n" +
-                        "help - даёт справку\n" +
-                        "urls - возвращает активные запросы в этом диалоге\n" +
-                        "//clear - удаляет все запросы\n" +
+                        "Позволяет получать объявления с Avito.ru в момент их выставления на сайте. " +
+                                "Также некоторые категории товаров могут оцениваться с точки зрения перепродажи." +
+                        "Бот доступен в vk.com и telegram. К сожалению, из-за блокировок бот в телеграмме может " +
+                        "отвечать достаточно долго (до 2 минут).\n" +
+                        "Для работы бота необходимо прислать ссылку на поиск с указанными параметрами.\n" +
+                        "\nДругие доступные команды:\n" +
+                        "help - выводит справку, которую вы сейчас читаете\n" +
+                        "urls - выводит все активные запросы\n" +
+                        "clear - удаляет все запросы\n" +
+                        "mute - устанавливает режим \"Не беспокоить\" и снимает его" +
                         "time - возвращает время на сервере\n" +
-                        "Буква от A до F установит минимальную оценку для объявлений, которые будут показываются\n" +
-                        "Все остальные сообщения расцениваются, как ссылки.");
+                        "\nТакже можно установить категории объявлений по \"профиту\". Для этого достаточно прислать" +
+                        "название категории:\n" +
+                        "\t1) Ultra - профит от 10.000р и выше" +
+                        "\t2) High - профит от 5.000р и выше" +
+                        "\t3) Medium - профит от 3.000р и выше" +
+                        "\t4) Low - профит от 0р и выше" +
+                        "\t5) All - вывод абсолютно всех объявлений");
                 break;
             }
             case "hello":

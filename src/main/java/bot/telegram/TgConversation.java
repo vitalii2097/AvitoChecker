@@ -39,8 +39,13 @@ public class TgConversation extends Conversation {
         messageBuilder.append('\n');
         for (int i = 0; i < photos.size(); i++) {
             messageBuilder
-                    .append(toHref("photo" + (i + 1), photos.get(i).trim()))
-                    .append("      ");
+                    .append(toHref("photo" + (i + 1), photos.get(i).trim()));
+
+            if ((i + 1) % 3 == 0) {
+                messageBuilder.append("\n\n");
+            } else {
+                messageBuilder.append("\t");
+            }
         }
         message = messageBuilder.toString();
         send(message);
