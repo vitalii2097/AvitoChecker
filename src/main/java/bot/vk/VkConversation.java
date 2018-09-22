@@ -47,7 +47,7 @@ public class VkConversation extends Conversation {
         builder.append("\n").append(checkedAnnouncement.getModel());
         builder.append("\n(").append(announcement.getName()).append(")");
         builder.append("\n(").append(announcement.getPrice()).append('\u20BD').append(')');
-        builder.append("\n(").append(announcement.getMetro()).append(')');
+        builder.append("\n").append(announcement.getMetro());
         builder.append("\n\n").append(announcement.getDescription().length() < 700
                         ? announcement.getDescription()
                         : (announcement.getDescription().substring(0, 700) + "...")
