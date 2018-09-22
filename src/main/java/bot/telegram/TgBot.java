@@ -125,7 +125,7 @@ class TeleBot extends TelegramLongPollingBot {
             }
 
             TgConversation conversation = conversations.get(chatId);
-            conversation.notifyAboutNewMessage(update.getMessage().getText());
+            new Thread(() -> conversation.notifyAboutNewMessage(update.getMessage().getText())).start();
         }
     }
 
