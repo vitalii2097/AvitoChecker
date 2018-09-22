@@ -73,6 +73,7 @@ public class TgBot extends Bot {
     }
 
     void sendMessage(SendMessage sendMessage) {
+        conversationLogger.info("Начало отправки {}", sendMessage);
         try {
             teleBot.execute(sendMessage);
             conversationLogger.info("Отправлено сообщение {}", sendMessage);
