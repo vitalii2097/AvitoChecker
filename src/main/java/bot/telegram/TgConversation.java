@@ -5,7 +5,7 @@ import logic.appreciation.CheckedAnnouncement;
 import me.veppev.avitodriver.Announcement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class TgConversation extends Conversation {
             if ((i + 1) % 3 == 0) {
                 messageBuilder.append("\n\n");
             } else {
-                messageBuilder.append("\t");
+                messageBuilder.append("      ");
             }
         }
         message = messageBuilder.toString();

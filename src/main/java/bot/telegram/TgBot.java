@@ -4,18 +4,22 @@ import bot.Bot;
 import checker.AvitoChecker;
 import me.veppev.avitodriver.ProxyList;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.telegram.telegrambots.ApiContext;
 import org.telegram.telegrambots.ApiContextInitializer;
+import org.telegram.telegrambots.TelegramBotsApi;
+import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.ApiContext;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
+import org.telegram.telegrambots.exceptions.TelegramApiException;
+import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,13 +38,15 @@ public class TgBot extends Bot {
         super(avitoChecker);
 
         ProxyList list = new ProxyList();
-        HttpHost proxyServer = new HttpHost("96.244.187.232", 40325);//list.getProxyServer();
+        HttpHost proxyServer = new HttpHost("mnsfw.teletype.live", 1080);//list.getProxyServer();
+        String log = "telegram";
+        String pass = "telegram";
 
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
 
-        DefaultBotOptions defaultBotOptions = proxyWithoutAuth(proxyServer);
+        DefaultBotOptions defaultBotOptions = proxyWithAuth(proxyServer, log, pass);
 
         if (useProxy) {
             teleBot = new TeleBot(defaultBotOptions);
@@ -57,6 +63,24 @@ public class TgBot extends Bot {
         System.out.println("телега запустилась!!!!!!");
     }
 
+    private static DefaultBotOptions proxyWithAuth(HttpHost host, String login, String password) {
+        DefaultBotOptions defaultBotOptions = ApiContext.getInstance(DefaultBotOptions.class);
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(
+                new AuthScope(host.getHostName(), host.getPort()),
+                new UsernamePasswordCredentials(login, password));
+        RequestConfig requestConfig = RequestConfig
+                .custom()
+                .setProxy(host)
+                .setAuthenticationEnabled(true)
+                .build();
+        defaultBotOptions.setRequestConfig(requestConfig);
+        defaultBotOptions.setCredentialsProvider(credentialsProvider);
+        defaultBotOptions.setHttpProxy(host);
+
+        return defaultBotOptions;
+    }
+
     private static DefaultBotOptions proxyWithoutAuth(HttpHost host) {
         DefaultBotOptions defaultBotOptions = ApiContext.getInstance(DefaultBotOptions.class);
         RequestConfig requestConfig = RequestConfig
@@ -66,8 +90,7 @@ public class TgBot extends Bot {
                 .build();
         defaultBotOptions.setRequestConfig(requestConfig);
 
-        defaultBotOptions.setProxyHost(host.getHostName());
-        defaultBotOptions.setProxyPort(host.getPort());
+        defaultBotOptions.setHttpProxy(host);
 
         return defaultBotOptions;
     }
