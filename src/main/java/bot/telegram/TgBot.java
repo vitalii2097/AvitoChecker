@@ -30,15 +30,13 @@ public class TgBot extends Bot {
 
     private final TeleBot teleBot;
     //TODO вынести прокси
-    private static final String Host = "112.78.35.174";
-    private static final Integer Port = 4145;
     static final Logger tgBotLogger = LogManager.getLogger(TgBot.class.getSimpleName());
 
-    public TgBot(AvitoChecker avitoChecker, boolean useProxy) {
+    public TgBot(AvitoChecker avitoChecker, HttpHost proxyServer) {
         super(avitoChecker);
 
         ProxyList list = new ProxyList();
-        HttpHost proxyServer = new HttpHost("mnsfw.teletype.live", 1080);//list.getProxyServer();
+
         String log = "telegram";
         String pass = "telegram";
 
@@ -46,9 +44,9 @@ public class TgBot extends Bot {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
 
-        DefaultBotOptions defaultBotOptions = proxyWithAuth(proxyServer, log, pass);
 
-        if (useProxy) {
+        if (proxyServer != null) {
+            DefaultBotOptions defaultBotOptions = proxyWithoutAuth(proxyServer);
             teleBot = new TeleBot(defaultBotOptions);
         } else {
             teleBot = new TeleBot();
